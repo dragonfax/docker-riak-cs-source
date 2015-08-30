@@ -16,15 +16,11 @@ ENV STANCHION_VERSION 2.0.0
 ENV STANCHION_SHORT_VERSION 2.0
 
 # Install dependencies
-RUN apt-get update -qq && apt-get install unzip -y
+RUN apt-get update -qq && apt-get -y install unzip erlang build-essential libc6-dev-i386 git autoconf libncurses5-dev openssl libssl-dev fop xsltproc unixodbc-dev wget
 
 # Install Riak
 RUN curl --output /riak_${RIAK_VERSION}-1_amd64.deb http://s3.amazonaws.com/downloads.basho.com/riak/${RIAK_SHORT_VERSION}/${RIAK_VERSION}/ubuntu/precise/riak_${RIAK_VERSION}-1_amd64.deb
 RUN (cd / && dpkg -i "riak_${RIAK_VERSION}-1_amd64.deb")
-
-# Install Riak CS
-RUN curl --output /riak-cs_${RIAK_CS_VERSION}-1_amd64.deb http://s3.amazonaws.com/downloads.basho.com/riak-cs/${RIAK_CS_SHORT_VERSION}/${RIAK_CS_VERSION}/ubuntu/trusty/riak-cs_${RIAK_CS_VERSION}-1_amd64.deb
-RUN (cd / && dpkg -i "riak-cs_${RIAK_CS_VERSION}-1_amd64.deb")
 
 # Install Stanchion
 RUN curl --output /stanchion_${STANCHION_VERSION}-1_amd64.deb http://s3.amazonaws.com/downloads.basho.com/stanchion/${STANCHION_SHORT_VERSION}/${STANCHION_VERSION}/ubuntu/trusty/stanchion_${STANCHION_VERSION}-1_amd64.deb
@@ -36,9 +32,6 @@ ADD bin/startup.sh /bin/startup.sh
 ADD etc/riak.conf /etc/riak/riak.conf
 ADD etc/riak-advanced.config /etc/riak/advanced.config
 
-# Install dependencies
-RUN apt-get install -y build-essential libc6-dev-i386 git autoconf libncurses5-dev openssl libssl-dev fop xsltproc unixodbc-dev wget
-
 RUN git clone https://github.com/basho/riak_cs.git /app
 
 
@@ -49,9 +42,6 @@ RUN ( cd /otp_basho/OTP_R16B02_basho8 && ./otp_build autoconf && ./configure && 
 
 RUN ( cd /app && make rel )
 
-RUN dpkg -r riak-cs
-
-RUN rm -rf /usr/local/bin/erl /usr/local/bin/erlc /usr/local/lib/erlang
 
 # Open the HTTP port for Riak and Riak CS (S3)
 EXPOSE 8098 8080 22
