@@ -3,15 +3,11 @@
 # VERSION       0.1.0
 
 FROM phusion/baseimage:0.9.15
-# Original MAINTAINER Hector Castro hectcastro@gmail.com
 MAINTAINER Jason Stillwell dragonfax@gmail.com
 
 # Environmental variables
-ENV DEBIAN_FRONTEND noninteractive
 ENV RIAK_VERSION 2.0.5
 ENV RIAK_SHORT_VERSION 2.0
-ENV RIAK_CS_VERSION 2.0.1
-ENV RIAK_CS_SHORT_VERSION 2.0
 ENV STANCHION_VERSION 2.0.0
 ENV STANCHION_SHORT_VERSION 2.0
 
@@ -28,7 +24,7 @@ RUN (cd / && dpkg -i "stanchion_${STANCHION_VERSION}-1_amd64.deb")
 
 ADD bin/startup.sh /bin/startup.sh
 
-# Tune Riak and Riak CS configuration settings for the container
+# Tune Riak configuration settings for the container
 ADD etc/riak.conf /etc/riak/riak.conf
 ADD etc/riak-advanced.config /etc/riak/advanced.config
 
@@ -39,5 +35,4 @@ RUN make -j 20 rel
 # Open the HTTP port for Riak and Riak CS (S3)
 EXPOSE 8098 8080 22
 
-# Leverage the baseimage-docker init system
 CMD bash
