@@ -47,6 +47,12 @@ RUN curl --output /otp_src_R16B02-basho8.tar.gz http://s3.amazonaws.com/download
 RUN ( mkdir /otp_basho && cd /otp_basho && tar zxvf /otp_src_R16B02-basho8.tar.gz )
 RUN ( cd /otp_basho/OTP_R16B02_basho8 && ./otp_build autoconf && ./configure && make && sudo make install )
 
+RUN ( cd /app && make rel )
+
+RUN dpkg -r riak-cs
+
+RUN rm -rf /usr/local/bin/erl /usr/local/bin/erlc /usr/local/lib/erlang
+
 # Open the HTTP port for Riak and Riak CS (S3)
 EXPOSE 8098 8080 22
 
