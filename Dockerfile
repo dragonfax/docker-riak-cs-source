@@ -37,9 +37,15 @@ ADD etc/riak.conf /etc/riak/riak.conf
 ADD etc/riak-advanced.config /etc/riak/advanced.config
 
 # Install dependencies
-RUN apt-get update -qq && apt-get install -y unzip build-essential libc6-dev-i386 git
+RUN apt-get install -y build-essential libc6-dev-i386 git autoconf libncurses5-dev openssl libssl-dev fop xsltproc unixodbc-dev wget
 
 RUN git clone https://github.com/basho/riak_cs.git /app
+
+
+# Build Basho's special erlang
+RUN curl --output /otp_src_R16B02-basho8.tar.gz http://s3.amazonaws.com/downloads.basho.com/erlang/otp_src_R16B02-basho8.tar.gz
+RUN ( mkdir /otp_basho && cd /otp_basho && tar zxvf /otp_src_R16B02-basho8.tar.gz )
+RUN ( cd /otp_basho/OTP_R16B02_basho8 && ./otp_build autoconf && ./configure && make && sudo make install )
 
 # Open the HTTP port for Riak and Riak CS (S3)
 EXPOSE 8098 8080 22
