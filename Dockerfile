@@ -33,9 +33,8 @@ ADD etc/riak.conf /etc/riak/riak.conf
 ADD etc/riak-advanced.config /etc/riak/advanced.config
 
 RUN git clone https://github.com/basho/riak_cs.git /app
-
-RUN ( cd /app && make rel )
-
+WORKDIR /app
+RUN make -j 20 rel
 
 # Open the HTTP port for Riak and Riak CS (S3)
 EXPOSE 8098 8080 22
