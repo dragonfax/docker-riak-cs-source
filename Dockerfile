@@ -34,12 +34,6 @@ ADD etc/riak-advanced.config /etc/riak/advanced.config
 
 RUN git clone https://github.com/basho/riak_cs.git /app
 
-
-# Build Basho's special erlang
-RUN curl --output /otp_src_R16B02-basho8.tar.gz http://s3.amazonaws.com/downloads.basho.com/erlang/otp_src_R16B02-basho8.tar.gz
-RUN ( mkdir /otp_basho && cd /otp_basho && tar zxvf /otp_src_R16B02-basho8.tar.gz )
-RUN ( cd /otp_basho/OTP_R16B02_basho8 && ./otp_build autoconf && ./configure && make && sudo make install )
-
 RUN ( cd /app && make rel )
 
 
