@@ -32,6 +32,9 @@ RUN git clone https://github.com/basho/riak_cs.git /app
 WORKDIR /app
 RUN make -j 20 rel
 
+# Make a tarball available to start development conveniently with an external, re-used, volume
+RUN tar czvpf /riak-cs-source.tgz .
+
 # Open the HTTP port for Riak and Riak CS (S3)
 EXPOSE 8098 8080 22
 
